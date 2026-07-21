@@ -7,3 +7,4 @@ __pycache__/
 renders/
 out/
 .DS_Store
+dist/

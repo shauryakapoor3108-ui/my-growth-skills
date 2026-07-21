@@ -101,11 +101,23 @@ def main() -> int:
 
     try:
         mod = importlib.import_module(module_name)
-    except ImportError:
+    except ImportError as exc:
+        # Distinguish "the extractor itself is missing" from "the extractor is
+        # built but one of its dependencies is not installed". Reporting the
+        # second as "not yet built" sends you chasing phantom missing features.
+        missing = getattr(exc, "name", "") or ""
+        _PIP = {"bs4": "beautifulsoup4", "readability": "readability-lxml",
+                "lxml": "lxml", "requests": "requests", "PIL": "pillow"}
+        if missing in ("", module_name):
+            msg = f"Extractor module '{module_name}' not available (not yet built)"
+        else:
+            pkg = _PIP.get(missing, missing)
+            msg = (f"Extractor '{module_name}' is built but is missing a Python "
+                   f"dependency: '{missing}'. Install it with: pip install {pkg}")
         result = {
             "status": "error",
             "type": extract_type,
-            "error": f"Extractor module '{module_name}' not available (not yet built)",
+            "error": msg,
         }
         print(json.dumps(result))
         return 1
