@@ -55,6 +55,17 @@ Summary model is configurable with `FEED_MODEL` (default `llama-3.3-70b-versatil
 ## Requirements
 `yt-dlp` and `ffmpeg` on PATH, Python 3.10+. No other runtime dependencies.
 
+
+## Works with `intake`
+
+`feed` finds what is new; [`intake`](../intake) turns it into knowledge. When
+`intake` is installed, `feed` delegates extraction to it automatically and you
+get chunked transcripts plus per-frame vision descriptions instead of captions
+alone. When it is not installed, `feed` falls back to its own captions path and
+keeps working. Pass `--no-intake` to force the fallback.
+
+Both routes file through `scripts/file_note.py`, so notes are identical either way.
+
 ## Notes
 - Feed endpoints throttle. `fetch()` retries with backoff (1s, 2s, 4s) rather than
   failing on a transient 404/500.

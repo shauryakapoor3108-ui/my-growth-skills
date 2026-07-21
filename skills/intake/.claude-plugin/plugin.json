@@ -1,0 +1,10 @@
+{
+  "name": "intake",
+  "version": "0.1.0",
+  "description": "Extraction engine for a second brain. Turns any URL (video, playlist, article, GitHub repo, creator) into structured knowledge: chunked transcripts, per-frame vision descriptions, clean article text, repo structure. Pipes into a vault note. Pairs with the feed skill for subscriptions.",
+  "author": { "name": "Shaurya Kapoor" },
+  "homepage": "https://github.com/shauryakapoor3108-ui/my-growth-skills",
+  "repository": "https://github.com/shauryakapoor3108-ui/my-growth-skills",
+  "license": "MIT",
+  "keywords": ["intake", "extraction", "second-brain", "obsidian", "youtube", "transcription", "vision", "rss", "knowledge-management", "yt-dlp"]
+}

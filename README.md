@@ -25,7 +25,30 @@ Then install what you want:
 
 That is the whole setup. It will clone, wire the skills in, check your dependencies, and tell you the one or two things it needs from you.
 
+## How they fit together
+
+The first two skills are one pipeline, split at the seam that matters. `intake` turns a URL into knowledge. `feed` decides *which* URLs, by watching your subscriptions. Filing is shared, so a link you paste by hand and a video that arrived overnight land as the same kind of note.
+
+```
+        a link you paste ─┐
+                          ├─→  intake  ─→  file_note  ─→  your second brain
+   feed (subscriptions) ──┘
+```
+
+That split is deliberate. `intake` works alone when you just want to capture one
+thing properly. `feed` works alone when you have no `intake` installed, falling
+back to a captions-only path. Together you get subscriptions with vision-analysed
+video and article, repo and playlist support.
+
 ## The skills
+
+### [`intake`](skills/intake) — turn any URL into knowledge
+
+Video, playlist, article, GitHub repo, or creator profile. Videos are chunked, transcribed, and analysed **frame by frame with a vision model**, so a source that shows rather than says (diagrams, screen recordings, whiteboards) still yields something usable.
+
+```bash
+intake video "<url>" | file_note        # straight into the vault
+```
 
 ### [`feed`](skills/feed) — keep your second brain fed
 

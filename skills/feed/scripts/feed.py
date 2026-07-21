@@ -16,6 +16,7 @@ Config: ~/.config/my-growth-skills/feed.json   (created on first `add`)
 Keys: GROQ_API_KEY via env or ~/.config/my-growth-skills/.env
 """
 import json, os, re, subprocess, sys, urllib.request, xml.etree.ElementTree as ET
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from datetime import datetime, timezone
 
 CFG_DIR = os.path.expanduser("~/.config/my-growth-skills")
@@ -110,7 +111,37 @@ def parse_feed(feed_url):
     return items
 
 
-# ---------- transcript ----------
+# ---------- extraction ----------
+def intake_path():
+    """Locate the `intake` extractor if the user has it. feed delegates to it when
+    present (richer: chunking, vision descriptions, article/repo/playlist support)
+    and falls back to its own captions path when not, so this works standalone."""
+    for p in [os.environ.get("INTAKE_EXTRACT"),
+              os.path.expanduser("~/.agents/skills/intake/scripts/extract.py"),
+              os.path.expanduser("~/.claude/skills/intake/scripts/extract.py")]:
+        if p and os.path.exists(p):
+            return p
+    return None
+
+
+def extract_via_intake(url, kind="video"):
+    """Run intake and return its result dict, or None if unavailable/failed."""
+    exe = intake_path()
+    if not exe:
+        return None
+    try:
+        r = subprocess.run(["python3", exe, kind, "--keep", url],
+                           capture_output=True, text=True, timeout=1800)
+        if r.returncode != 0 or not r.stdout.strip():
+            print(f"   intake failed, falling back to captions: {r.stderr[:120]}", file=sys.stderr)
+            return None
+        data = json.loads(r.stdout)
+        return data if data.get("status") == "ok" else None
+    except Exception as e:
+        print(f"   intake error, falling back to captions: {e}", file=sys.stderr)
+        return None
+
+
 def transcript_for(url):
     """Captions via yt-dlp (fast, no download). Returns plain text or ''. """
     import tempfile, glob
@@ -224,16 +255,34 @@ def cmd_run(cfg, limit, dry, ignore_seen=False, only=None):
     if not items:
         print("nothing new")
         return
+    use_intake = intake_path() and "--no-intake" not in sys.argv
     for it in items:
         print(f"→ {it['title'][:70]}")
         if dry:
             continue
-        text = transcript_for(it["url"])
-        summary = summarise(it["title"], it.get("author", ""), it["url"], text, key) if text else None
-        path = write_note(cfg, it, summary)
+
+        path, note = None, ""
+        if use_intake:
+            # preferred: the richer extractor (chunking, vision, multi-type),
+            # filed through the shared filer so both routes write identical notes.
+            res = extract_via_intake(it["url"])
+            if res:
+                import file_note
+                norm = file_note.normalise(res)
+                norm.setdefault("url", it["url"])
+                summary = file_note.summarise(norm, key)
+                path = file_note.write_note(norm, summary, cfg.get("vault", "~/vault/sources"))
+                note = "  (via intake)"
+
+        if not path:  # fallback: self-contained captions path
+            text = transcript_for(it["url"])
+            summary = summarise(it["title"], it.get("author", ""), it["url"], text, key) if text else None
+            path = write_note(cfg, it, summary)
+            note = "" if text else "  (no captions)"
+
         cfg.setdefault("seen", []).append(it["id"])
         save_cfg(cfg)
-        print(f"   filed: {path}{'' if text else '  (no captions)'}")
+        print(f"   filed: {path}{note}")
 
 
 def main():

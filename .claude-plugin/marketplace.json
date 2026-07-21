@@ -3,12 +3,26 @@
   "metadata": {
     "description": "A small set of AI tools that run inside your coding agent. feed keeps a second brain fed from your subscriptions; video-edit cuts a talking-head video without a timeline."
   },
-  "owner": { "name": "Shaurya Kapoor" },
+  "owner": {
+    "name": "Shaurya Kapoor"
+  },
   "plugins": [
+    {
+      "name": "intake",
+      "description": "Extraction engine for a second brain. Any URL (video, playlist, article, repo, creator) into structured knowledge, ready to file as a note.",
+      "author": {
+        "name": "Shaurya Kapoor"
+      },
+      "source": "./skills/intake",
+      "category": "productivity",
+      "homepage": "https://github.com/shauryakapoor3108-ui/my-growth-skills"
+    },
     {
       "name": "feed",
       "description": "Subscribe to YouTube channels and RSS feeds. Pulls transcripts of new items, summarises them, and files structured notes into an Obsidian vault.",
-      "author": { "name": "Shaurya Kapoor" },
+      "author": {
+        "name": "Shaurya Kapoor"
+      },
       "source": "./skills/feed",
       "category": "productivity",
       "homepage": "https://github.com/shauryakapoor3108-ui/my-growth-skills"
@@ -16,7 +30,9 @@
     {
       "name": "video-edit",
       "description": "Tighten and assemble talking-head video. Pulls a clip, transcribes it, cuts false starts and dead air, overlays cutaways, renders.",
-      "author": { "name": "Shaurya Kapoor" },
+      "author": {
+        "name": "Shaurya Kapoor"
+      },
       "source": "./skills/video-edit",
       "category": "productivity",
       "homepage": "https://github.com/shauryakapoor3108-ui/my-growth-skills"

@@ -15,9 +15,9 @@ pull (Drive/local) -> transcribe (Groq whisper-large-v3) -> find cuts (false sta
 ```
 
 ## Keys / deps
-- **GROQ_API_KEY** — read from `~/sac-icm/.env.local` (or env). Used for whisper-large-v3 transcription.
-- **Google Drive** — OAuth token at `~/.config/gcloud/sheets-token.json` (has `drive` scope). Used to pull/push clips.
-- **ffmpeg**, **auto-editor** (`~/.venvs/autoeditor/bin`), **faster-whisper** (local fallback), **playwright** (chromium, for cutaway capture).
+- **GROQ_API_KEY** — from the environment or `~/.config/my-growth-skills/.env`. Used for whisper-large-v3 transcription. With no key, transcription falls back to local `faster-whisper`.
+- **Google Drive** (optional) — reuses an existing OAuth token with `drive` scope at `~/.config/gcloud/sheets-token.json`. Only needed to pull/push clips from Drive; local files need nothing.
+- **ffmpeg** (required), plus optional **auto-editor** (silence removal), **faster-whisper** (local transcription), **playwright** (chromium, for cutaway capture).
 
 ## Scripts (all under `scripts/`, run with `~/.venvs/autoeditor/bin/python`)
 
