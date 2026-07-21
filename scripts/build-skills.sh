@@ -12,7 +12,8 @@
 #
 # Plugin/command/hook metadata is intentionally left out: Claude Code reads that
 # from the repo, and claude.ai's bundle wants exactly one SKILL.md and no more
-# than 200 files.
+# than 200 files. Zipping is done with Python's zipfile so the only build
+# dependency is Python itself (no `zip` binary required).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -30,35 +31,38 @@ fi
 
 mkdir -p dist
 for SKILL in "${SKILLS[@]}"; do
-  SRC="skills/$SKILL"
-  [ -f "$SRC/SKILL.md" ] || { echo "error: $SRC/SKILL.md not found" >&2; exit 1; }
+  [ -f "skills/$SKILL/SKILL.md" ] || { echo "error: skills/$SKILL/SKILL.md not found" >&2; exit 1; }
+  python3 - "$SKILL" <<'PY'
+import os, sys, zipfile
 
-  STAGE="$(mktemp -d)"
-  trap 'rm -rf "$STAGE"' EXIT
-  mkdir -p "$STAGE/$SKILL/scripts"
+skill = sys.argv[1]
+src = os.path.join("skills", skill)
+out = os.path.join("dist", f"{skill}.skill")
+if os.path.exists(out):
+    os.remove(out)
 
-  cp "$SRC/SKILL.md" "$STAGE/$SKILL/SKILL.md"
-  if [ -d "$SRC/scripts" ]; then
-    cp "$SRC"/scripts/*.py "$STAGE/$SKILL/scripts/" 2>/dev/null || true
-  fi
-  cp scripts/setup.py "$STAGE/$SKILL/scripts/setup.py"   # shared preflight travels with the bundle
+members = [(os.path.join(src, "SKILL.md"), f"{skill}/SKILL.md")]
+sdir = os.path.join(src, "scripts")
+if os.path.isdir(sdir):
+    for f in sorted(os.listdir(sdir)):
+        if f.endswith(".py"):
+            members.append((os.path.join(sdir, f), f"{skill}/scripts/{f}"))
+# the shared preflight travels with every bundle
+members.append(("scripts/setup.py", f"{skill}/scripts/setup.py"))
 
-  OUT="$REPO_ROOT/dist/$SKILL.skill"
-  rm -f "$OUT"
-  (cd "$STAGE" && zip -qr "$OUT" "$SKILL")
+with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    for real, arc in members:
+        z.write(real, arc)
 
-  COUNT=$(unzip -l "$OUT" | tail -1 | awk '{print $2}')
-  SIZE=$(du -h "$OUT" | cut -f1)
-  if [ "$COUNT" -gt 200 ]; then
-    echo "error: $COUNT files in $OUT, claude.ai's cap is 200" >&2
-    exit 1
-  fi
-  SKILL_MD_COUNT=$(unzip -l "$OUT" | grep -c "SKILL.md" || true)
-  if [ "$SKILL_MD_COUNT" -ne 1 ]; then
-    echo "error: expected exactly one SKILL.md in $OUT, found $SKILL_MD_COUNT" >&2
-    exit 1
-  fi
+with zipfile.ZipFile(out) as z:
+    names = z.namelist()
+    if len(names) > 200:
+        sys.exit(f"error: {len(names)} files in {out}, claude.ai's cap is 200")
+    n_skill = sum(1 for n in names if n.endswith("SKILL.md"))
+    if n_skill != 1:
+        sys.exit(f"error: expected exactly one SKILL.md in {out}, found {n_skill}")
 
-  rm -rf "$STAGE"; trap - EXIT
-  echo "built $OUT ($COUNT files, $SIZE)"
+size = os.path.getsize(out)
+print(f"built {out} ({len(names)} files, {size/1024:.1f}K)")
+PY
 done
