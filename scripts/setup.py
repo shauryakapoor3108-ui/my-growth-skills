@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Setup / preflight for ai-skills.
+"""Setup / preflight for my-growth-skills.
 
 Modes:
   setup.py --check          Silent preflight. Exit 0 if ready, non-zero on failure.
@@ -17,7 +17,7 @@ from __future__ import annotations
 import json, os, shutil, sys
 from pathlib import Path
 
-CFG_DIR = Path(os.path.expanduser("~/.config/ai-skills"))
+CFG_DIR = Path(os.path.expanduser("~/.config/my-growth-skills"))
 ENV_FILE = CFG_DIR / ".env"
 
 # binary -> why it is needed
@@ -79,7 +79,7 @@ def scaffold_env() -> bool:
         return False
     CFG_DIR.mkdir(parents=True, exist_ok=True)
     ENV_FILE.write_text(
-        "# ai-skills keys. Groq is used for Whisper transcription and summaries.\n"
+        "# my-growth-skills keys. Groq is used for Whisper transcription and summaries.\n"
         "# Any OpenAI-compatible endpoint works; see README to swap providers.\n"
         "GROQ_API_KEY=\n"
     )
@@ -100,7 +100,7 @@ def main() -> int:
         return 0 if st["ready"] else 1  # silent by design
 
     # installer / human mode
-    print("ai-skills preflight\n")
+    print("my-growth-skills preflight\n")
     if st["missing_required"]:
         print("Missing required tools:")
         for b in st["missing_required"]:

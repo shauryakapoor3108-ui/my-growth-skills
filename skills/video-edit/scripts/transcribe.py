@@ -8,7 +8,7 @@ Prints segments with timestamps and marks pauses (useful for finding dead air /
 false starts before a cut). Key resolution order:
   1. $GROQ_API_KEY
   2. $GROQ_ENV_FILE (path to a .env containing GROQ_API_KEY=...)
-  3. ~/.config/ai-skills/.env
+  3. ~/.config/my-growth-skills/.env
 """
 import io, json, os, subprocess, sys, tempfile, urllib.request
 
@@ -19,7 +19,7 @@ MODEL = os.environ.get("GROQ_WHISPER_MODEL", "whisper-large-v3")
 def groq_key():
     if os.environ.get("GROQ_API_KEY"):
         return os.environ["GROQ_API_KEY"]
-    candidates = [os.environ.get("GROQ_ENV_FILE"), os.path.expanduser("~/.config/ai-skills/.env")]
+    candidates = [os.environ.get("GROQ_ENV_FILE"), os.path.expanduser("~/.config/my-growth-skills/.env")]
     for path in filter(None, candidates):
         if os.path.exists(path):
             for line in open(path):
@@ -41,7 +41,7 @@ def to_wav(inp):
 def _multipart(fields, file_field, filename, file_bytes, content_type="audio/wav"):
     """Build a correct multipart/form-data body. (The earlier hand-rolled version
     interleaved headers wrongly and Groq rejected it -- this is the fix.)"""
-    boundary = "----ai-skills-" + os.urandom(8).hex()
+    boundary = "----my-growth-skills-" + os.urandom(8).hex()
     buf = io.BytesIO()
     for name, value in fields.items():
         buf.write(f"--{boundary}\r\n".encode())
@@ -64,7 +64,7 @@ def groq_transcribe(wav, key):
         "Authorization": "Bearer " + key,
         "Content-Type": f"multipart/form-data; boundary={boundary}",
         # Groq's edge rejects urllib's default UA with a 403.
-        "User-Agent": "ai-skills/0.1 (+https://github.com/shauryakapoor3108-ui)",
+        "User-Agent": "my-growth-skills/0.1 (+https://github.com/shauryakapoor3108-ui)",
         "Accept": "application/json",
     })
     data = json.load(urllib.request.urlopen(req, timeout=180))

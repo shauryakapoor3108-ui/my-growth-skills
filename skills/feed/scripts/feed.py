@@ -11,16 +11,16 @@ Pipeline per new item:
   discover (RSS)  ->  transcript (yt-dlp captions)  ->  summarise (Groq LLM)
   ->  write a linked markdown note into the Obsidian vault  ->  mark seen
 
-Config: ~/.config/ai-skills/feed.json   (created on first `add`)
+Config: ~/.config/my-growth-skills/feed.json   (created on first `add`)
   { "vault": "~/vault/sources", "sources": [...], "seen": [...] }
-Keys: GROQ_API_KEY via env or ~/.config/ai-skills/.env
+Keys: GROQ_API_KEY via env or ~/.config/my-growth-skills/.env
 """
 import json, os, re, subprocess, sys, urllib.request, xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
-CFG_DIR = os.path.expanduser("~/.config/ai-skills")
+CFG_DIR = os.path.expanduser("~/.config/my-growth-skills")
 CFG = os.path.join(CFG_DIR, "feed.json")
-UA = {"User-Agent": "ai-skills-feed/0.1", "Accept": "*/*"}
+UA = {"User-Agent": "my-growth-skills-feed/0.1", "Accept": "*/*"}
 CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
 SUMMARY_MODEL = os.environ.get("FEED_MODEL", "llama-3.3-70b-versatile")
 
@@ -174,6 +174,7 @@ def write_note(cfg, item, summary):
         f"published: {date}",
         f"captured: {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
         "type: source",
+        "provenance: ai-generated",
         "tags: [feed, video]",
         "status: unread",
         "---",
@@ -218,7 +219,7 @@ def new_items(cfg, limit=None):
 def cmd_run(cfg, limit, dry, ignore_seen=False, only=None):
     key = groq_key()
     if not key:
-        raise SystemExit("no GROQ_API_KEY (env or ~/.config/ai-skills/.env)")
+        raise SystemExit("no GROQ_API_KEY (env or ~/.config/my-growth-skills/.env)")
     items = new_items(cfg, limit) if not ignore_seen else parse_feed(resolve_feed(only))[:limit]
     if not items:
         print("nothing new")

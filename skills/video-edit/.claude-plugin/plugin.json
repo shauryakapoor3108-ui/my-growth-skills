@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Tighten and assemble talking-head video from the command line. Pulls a clip from Drive or disk, transcribes with Whisper, finds and cuts false starts and dead air, overlays screen-capture cutaways, burns captions, renders and pushes back.",
   "author": { "name": "Shaurya Kapoor" },
-  "homepage": "https://github.com/shauryakapoor3108-ui/ai-skills",
-  "repository": "https://github.com/shauryakapoor3108-ui/ai-skills",
+  "homepage": "https://github.com/shauryakapoor3108-ui/my-growth-skills",
+  "repository": "https://github.com/shauryakapoor3108-ui/my-growth-skills",
   "license": "MIT",
   "keywords": ["video", "editing", "ffmpeg", "whisper", "transcription", "silence-removal", "captions", "playwright", "groq"]
 }

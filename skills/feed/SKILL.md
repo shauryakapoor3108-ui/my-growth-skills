@@ -33,7 +33,7 @@ YouTube handles (`@channel`) are resolved to their RSS feed automatically, so no
 and no quota is needed for discovery.
 
 ## Config
-`~/.config/ai-skills/feed.json`, created on first `add`:
+`~/.config/my-growth-skills/feed.json`, created on first `add`:
 
 ```json
 {
@@ -49,7 +49,7 @@ Point `vault` at any folder inside your Obsidian vault. Notes are written as
 graph view pick them up immediately.
 
 ## Keys
-`GROQ_API_KEY` from the environment or `~/.config/ai-skills/.env`.
+`GROQ_API_KEY` from the environment or `~/.config/my-growth-skills/.env`.
 Summary model is configurable with `FEED_MODEL` (default `llama-3.3-70b-versatile`).
 
 ## Requirements
