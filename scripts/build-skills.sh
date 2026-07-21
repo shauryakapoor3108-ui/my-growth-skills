@@ -2,10 +2,17 @@
 # build-skills.sh — package each skill as a claude.ai-upload-ready .skill file.
 # Usage: bash scripts/build-skills.sh [skill-name ...]   (run from repo root)
 #
-# Produces dist/<skill>.skill — a zip with a single top-level <skill>/ directory
-# containing SKILL.md plus its scripts/ runtime. claude.ai's upload caps a bundle
-# at 200 files and expects exactly one SKILL.md, so plugin/command/hook metadata
-# (which Claude Code needs from the repo, not the bundle) is stripped here.
+# Produces dist/<skill>.skill — a zip whose single top-level directory is the
+# skill name, containing SKILL.md and its scripts/ runtime:
+#
+#   feed/
+#     SKILL.md
+#     scripts/feed.py
+#     scripts/setup.py
+#
+# Plugin/command/hook metadata is intentionally left out: Claude Code reads that
+# from the repo, and claude.ai's bundle wants exactly one SKILL.md and no more
+# than 200 files.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,17 +33,19 @@ for SKILL in "${SKILLS[@]}"; do
   SRC="skills/$SKILL"
   [ -f "$SRC/SKILL.md" ] || { echo "error: $SRC/SKILL.md not found" >&2; exit 1; }
 
-  OUT="dist/$SKILL.skill"
-  rm -f "$OUT"
-  git archive --format=zip --prefix="$SKILL/" -o "$OUT" HEAD -- "$SRC" scripts/setup.py
+  STAGE="$(mktemp -d)"
+  trap 'rm -rf "$STAGE"' EXIT
+  mkdir -p "$STAGE/$SKILL/scripts"
 
-  # git archive keeps the skills/<name>/ path; flatten is not possible in-place,
-  # so strip the metadata dirs the claude.ai bundle does not need.
-  zip -d "$OUT" \
-    "$SKILL/$SRC/.claude-plugin/*" \
-    "$SKILL/$SRC/.codex-plugin/*" \
-    "$SKILL/$SRC/commands/*" \
-    > /dev/null 2>&1 || true
+  cp "$SRC/SKILL.md" "$STAGE/$SKILL/SKILL.md"
+  if [ -d "$SRC/scripts" ]; then
+    cp "$SRC"/scripts/*.py "$STAGE/$SKILL/scripts/" 2>/dev/null || true
+  fi
+  cp scripts/setup.py "$STAGE/$SKILL/scripts/setup.py"   # shared preflight travels with the bundle
+
+  OUT="$REPO_ROOT/dist/$SKILL.skill"
+  rm -f "$OUT"
+  (cd "$STAGE" && zip -qr "$OUT" "$SKILL")
 
   COUNT=$(unzip -l "$OUT" | tail -1 | awk '{print $2}')
   SIZE=$(du -h "$OUT" | cut -f1)
@@ -49,5 +58,7 @@ for SKILL in "${SKILLS[@]}"; do
     echo "error: expected exactly one SKILL.md in $OUT, found $SKILL_MD_COUNT" >&2
     exit 1
   fi
+
+  rm -rf "$STAGE"; trap - EXIT
   echo "built $OUT ($COUNT files, $SIZE)"
 done
