@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GitHub Creator Extractor — fetches user/organization profile and top repos.
+GitHub Creator Extractor - fetches user/organization profile and top repos.
 
 Exports:
     process(url: str, domain: str = DEFAULT_DOMAIN) -> dict

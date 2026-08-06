@@ -1,6 +1,6 @@
 ---
 name: intake
-description: Extract structured knowledge from any URL — video, playlist, article, GitHub repo, or creator profile. Videos are chunked, transcribed and analysed frame-by-frame with a vision model. Outputs structured JSON, and pipes into a second-brain note. Use when the user says "ingest this", "extract this video", "read this article", "analyse this repo", "what's in this playlist", or hands over a link they want captured rather than just read.
+description: Extract structured knowledge from any URL - video, playlist, article, GitHub repo, or creator profile. Videos are chunked, transcribed and analysed frame-by-frame with a vision model. Outputs structured JSON, and pipes into a second-brain note. Use when the user says "ingest this", "extract this video", "read this article", "analyse this repo", "what's in this playlist", or hands over a link they want captured rather than just read.
 ---
 
 # intake
@@ -69,8 +69,8 @@ Everything personal is an environment variable, nothing is hardcoded:
 |---|---|---|
 | `INTAKE_DOMAIN` | `default` | Domain slug notes are filed under. Useful if your vault routes by project. |
 | `INTAKE_STORE` | `~/knowledge` | Where `--keep` persists durable artifacts. |
-| `GROQ_API_KEY` | — | Whisper transcription |
-| `OPENROUTER_API_KEY` | — | Frame vision descriptions |
+| `GROQ_API_KEY` | - | Whisper transcription |
+| `OPENROUTER_API_KEY` | - | Frame vision descriptions |
 
 Keys resolve from the environment or `~/.config/my-growth-skills/.env`.
 
@@ -89,4 +89,4 @@ Keys resolve from the environment or `~/.config/my-growth-skills/.env`.
 `yt-dlp` and `ffmpeg` for video. `beautifulsoup4` and `readability-lxml` for articles (`pip install beautifulsoup4 readability-lxml`). `git` for repos.
 
 If an extractor reports that a module is unavailable, check for a missing Python
-dependency first — that is the usual cause.
+dependency first - that is the usual cause.

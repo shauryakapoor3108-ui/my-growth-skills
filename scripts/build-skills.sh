@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# build-skills.sh — package each skill as a claude.ai-upload-ready .skill file.
+# build-skills.sh - package each skill as a claude.ai-upload-ready .skill file.
 # Usage: bash scripts/build-skills.sh [skill-name ...]   (run from repo root)
 #
-# Produces dist/<skill>.skill — a zip whose single top-level directory is the
+# Produces dist/<skill>.skill - a zip whose single top-level directory is the
 # skill name, containing SKILL.md and its scripts/ runtime:
 #
 #   feed/

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Playlist Extractor — fetches YouTube playlist metadata and video list
+Playlist Extractor - fetches YouTube playlist metadata and video list
 via yt-dlp --flat-playlist --dump-json. No per-video processing.
 
 Exports:
@@ -57,7 +57,7 @@ def process(url: str, domain: str = DEFAULT_DOMAIN) -> dict:
             "error": f"yt-dlp failed: {out.stderr.strip() or 'unknown error'}",
         }
 
-    # Parse JSON lines — first line carries playlist metadata
+    # Parse JSON lines - first line carries playlist metadata
     lines = [l for l in out.stdout.strip().split("\n") if l.strip()]
     if not lines:
         return {
@@ -81,7 +81,7 @@ def process(url: str, domain: str = DEFAULT_DOMAIN) -> dict:
     uploader: str = first.get("uploader") or first.get("channel", "")
     video_count: int = first.get("playlist_count", len(entries))
 
-    # Build flat video list — no per-video processing
+    # Build flat video list - no per-video processing
     videos: list[dict] = []
     for entry in entries:
         vid_id = entry.get("id", "")

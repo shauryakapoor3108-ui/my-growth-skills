@@ -711,7 +711,7 @@ def process(url: str, keep: bool = False, domain: str = DEFAULT_DOMAIN) -> dict:
             # 4c: Vision analysis via Gemini 2.5 Flash
             frames = _analyze_frames_vision(frames)
 
-            # 4d: Validate vision — every frame must have non-empty vision_description
+            # 4d: Validate vision - every frame must have non-empty vision_description
             pending_frames = [f for f in frames if f.get("vision_description", "") == ""]
             if pending_frames:
                 print(f"[video.py] warning: {len(pending_frames)} frames with no vision description", file=sys.stderr)

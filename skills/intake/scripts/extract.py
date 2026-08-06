@@ -52,7 +52,7 @@ def _parse_flags(args: list[str]) -> tuple[bool, str, list[str]]:
             else:
                 i += 1
         elif a.startswith("--"):
-            # Unknown flag — skip it (tolerate)
+            # Unknown flag - skip it (tolerate)
             i += 1
         else:
             url_args.append(a)
@@ -84,7 +84,7 @@ def main() -> int:
         print(json.dumps(result))
         return 1
 
-    # Parse flags properly — skip flag values, tolerate unknown flags
+    # Parse flags properly - skip flag values, tolerate unknown flags
     keep, domain, url_args = _parse_flags(remaining_args)
     url = url_args[0] if url_args else ""
 

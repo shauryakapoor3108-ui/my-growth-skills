@@ -2,7 +2,7 @@
 
 AI skills that compound. Point your coding agent at this repo and it gains the ability to keep your second brain fed and to cut your video without a timeline.
 
-They live **inside the agent you already use** — Claude Code, Codex, OpenCode, Pi. Plain Python underneath, so they also run as ordinary CLI tools with no agent at all.
+They live **inside the agent you already use** (Claude Code, Codex, OpenCode, Pi). Plain Python underneath, so they also run as ordinary CLI tools with no agent at all.
 
 ## Get started in one line
 
@@ -42,7 +42,7 @@ video and article, repo and playlist support.
 
 ## The skills
 
-### [`intake`](skills/intake) — turn any URL into knowledge
+### [`intake`](skills/intake): turn any URL into knowledge
 
 Video, playlist, article, GitHub repo, or creator profile. Videos are chunked, transcribed, and analysed **frame by frame with a vision model**, so a source that shows rather than says (diagrams, screen recordings, whiteboards) still yields something usable.
 
@@ -50,7 +50,7 @@ Video, playlist, article, GitHub repo, or creator profile. Videos are chunked, t
 intake video "<url>" | file_note        # straight into the vault
 ```
 
-### [`feed`](skills/feed) — keep your second brain fed
+### [`feed`](skills/feed): keep your second brain fed
 
 Subscribe to YouTube channels and RSS feeds. When something new lands it pulls the transcript, summarises it into claims and takeaways, and files a linked note into your Obsidian vault. You read notes, not a watch-later list.
 
@@ -65,7 +65,7 @@ feed run --limit 5
 
 Notes arrive with real frontmatter (`source`, `channel`, `published`, `type`, `provenance`, `tags`, `status: unread`), so Dataview and graph view pick them up the moment they are written.
 
-### [`video-edit`](skills/video-edit) — cut a talking-head video without a timeline
+### [`video-edit`](skills/video-edit): cut a talking-head video without a timeline
 
 Pulls a clip (Google Drive or local), transcribes it, finds false starts and dead air, cuts them, optionally overlays screen-capture cutaways and burns captions, then renders and pushes the result back.
 
@@ -80,13 +80,13 @@ Built in a day. Its first real job was cutting a 77-second take down to a usable
 <details>
 <summary>claude.ai (web), Codex / OpenCode / Pi, or manual</summary>
 
-**claude.ai (web)** — download a `.skill` bundle from [Releases](https://github.com/shauryakapoor3108-ui/my-growth-skills/releases) and upload it in the skills UI, or build one:
+**claude.ai (web).** Download a `.skill` bundle from [Releases](https://github.com/shauryakapoor3108-ui/my-growth-skills/releases) and upload it in the skills UI, or build one:
 
 ```bash
 bash scripts/build-skills.sh          # -> dist/feed.skill, dist/video-edit.skill
 ```
 
-**Codex / OpenCode / Pi** — each skill ships a `.codex-plugin/plugin.json` and a self-contained `scripts/` directory. Point your harness at `skills/<name>`, or call the scripts directly. There is no agent-specific code in them.
+**Codex / OpenCode / Pi.** Each skill ships a `.codex-plugin/plugin.json` and a self-contained `scripts/` directory. Point your harness at `skills/<name>`, or call the scripts directly. There is no agent-specific code in them.
 
 **Manual**
 

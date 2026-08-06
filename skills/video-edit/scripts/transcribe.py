@@ -105,7 +105,7 @@ def main():
         if temp and os.path.exists(wav):
             os.unlink(wav)
 
-    print(f"# {src} — {len(segs)} segments")
+    print(f"# {src} - {len(segs)} segments")
     gap_min = float(arg("--gaps", 0.8))
     prev = 0.0
     for s in segs:

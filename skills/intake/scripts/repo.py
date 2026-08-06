@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GitHub Repo Extractor — clones shallow, extracts structure + key files.
+GitHub Repo Extractor - clones shallow, extracts structure + key files.
 
 Exports:
     process(url: str) -> dict
@@ -361,7 +361,7 @@ def process(url: str, keep: bool = False, domain: str = DEFAULT_DOMAIN) -> dict:
             shutil.rmtree(vault_dir, ignore_errors=True)
         shutil.copytree(temp_dir, vault_dir, dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns('.git'))
-        # Do NOT clean up temp_dir — skip to keep it available
+        # Do NOT clean up temp_dir - skip to keep it available
     else:
         # ── 6. Cleanup (no --keep) ──────────────────────────────────────
         shutil.rmtree(temp_dir, ignore_errors=True)

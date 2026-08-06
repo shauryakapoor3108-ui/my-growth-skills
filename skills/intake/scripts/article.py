@@ -1,5 +1,5 @@
 """
-Article Extractor — fetches a URL, extracts clean text via readability.
+Article Extractor - fetches a URL, extracts clean text via readability.
 
 Exports:
     process(url: str, domain: str = DEFAULT_DOMAIN) -> dict
